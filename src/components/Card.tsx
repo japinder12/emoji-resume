@@ -13,7 +13,7 @@ const Card = forwardRef<HTMLDivElement, Props>(({ text, theme, showWatermark }, 
       )}
       aria-label="Emoji résumé preview"
     >
-      {text || "👋 Paste or upload your resume to preview"}
+      {text || "📋 Paste or upload your resume to preview"}
 
       {showWatermark && (
         <div
