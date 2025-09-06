@@ -14,7 +14,8 @@ const RX = {
   projects: /(projects?|built|created|hackathon)\b/i,
   education: /(education|university|college|degree|gpa|b\.?\s?(a|s)\b|m\.?\s?s\b)/i,
   awards: /(awards?|honors?|scholarship|dean'?s list)/i,
-  contact: /(email|@|github\.com|linkedin\.com|portfolio|website|https?:\/\/)/i,
+  // Basic phone detection: +country or (area) and 7-10 digits with separators
+  contact: /(email|@|github\.com|linkedin\.com|portfolio|website|https?:\/\/|\+?\d[\d\s().-]{7,}\d)/i,
   header: /(summary|profile|objective|—|–)/, // em/en dash or common header words
 };
 
@@ -30,4 +31,3 @@ export function detectSection(line: string): Section {
   if (RX.header.test(l)) return "header";
   return "other";
 }
-

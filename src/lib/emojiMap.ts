@@ -120,6 +120,8 @@ export const EMOJI: Entry[] = [
 
   // Contact / Links (section-aware)
   { kw: [/email|contact/], emoji: "📬", sections: ["contact","header"] },
+  // Phone numbers (e.g., +1 555-123-4567, (510) 960-9643)
+  { kw: [/\+?\d[\d\s().-]{7,}\d/], emoji: "📞", sections: ["contact","header"] },
   { kw: [/github\.com|github\b/], emoji: "🐙", sections: ["contact","header","projects"] },
   { kw: [/linkedin\.com|linkedin\b/], emoji: "🔗", sections: ["contact","header"] },
   { kw: [/portfolio|website|www\.|https?:\/\//], emoji: "🌐", sections: ["contact","header"] },
