@@ -110,8 +110,8 @@ export default function App() {
   };
 
   return (
-    <div data-theme={theme} className="min-h-screen bg-slate-50 text-slate-900">
-      <div className="mx-auto max-w-6xl p-6">
+    <div data-theme={theme} className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
+      <div className="mx-auto max-w-6xl p-6 flex flex-col" style={{ width: "100%" }}>
         <header className="mb-6">
           <h1 className="font-semibold" style={{ fontSize: "2rem", lineHeight: 1.2 }}>
             <span aria-hidden>💻</span> cvmoji — <span className="title-gradient">emoji resume generator</span>
@@ -145,7 +145,7 @@ export default function App() {
                   className="textarea h-[160px] w-full font-mono"
                   value={raw}
                   onChange={(e) => setRaw(e.target.value)}
-                  placeholder="Paste your résumé text…"
+                  placeholder="Paste your resume text…"
                 />
               </div>
             </div>
@@ -210,7 +210,7 @@ export default function App() {
           </section>
         </div>
 
-        <footer className="mt-10 text-xs text-slate-400">
+        <footer className="mt-10 text-xs text-slate-400 mt-auto">
           <div className="flex items-center justify-center gap-3">
             <span className="opacity-70">Built with Vite + React</span>
             <span className="opacity-50">·</span>

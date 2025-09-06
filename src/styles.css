@@ -22,6 +22,7 @@ button { background: white; }
 
 /* Minimal utility classes (Tailwind-like subset) */
 .min-h-screen { min-height: 100vh; }
+.mt-auto { margin-top: auto; }
 .bg-slate-50 { background-color: var(--bg); }
 .text-slate-900 { color: var(--text); }
 .text-slate-600 { color: #475569; }
@@ -201,7 +202,8 @@ button { background: white; }
 }
 
 /* Social fixed icons */
-.social-fixed { position: fixed; right: 16px; bottom: 16px; display: flex; gap: 10px; background: rgba(255,255,255,.95); padding: 6px 8px; border: 1px solid rgba(0,0,0,.06); border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,.08); }
+.social-fixed { position: fixed; right: 16px; bottom: 16px; display: flex; gap: 10px; background: rgba(255,255,255,.95); padding: 6px 8px; border: 1px solid rgba(0,0,0,.06); border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,.08); align-items: center; }
+.social-fixed a { display: flex; align-items: center; line-height: 0; }
 [data-theme="dark"] .social-fixed { background: rgba(17,24,39,.92); border-color: var(--border); }
 
 /* Watermark (centered pill at bottom during export) */

@@ -19,39 +19,41 @@ export const EMOJI: Entry[] = [
 
   // Languages
   { kw: [/java\b/], emoji: "☕️" },
-  { kw: [/kotlin\b/], emoji: "🟣" },
+  { kw: [/kotlin\b/], emoji: "🧵" },
   { kw: [/\bpython\b/], emoji: "🐍" },
-  { kw: [/typescript|javascript|\bts\b|\bjs\b/], emoji: "🟨" },
+  // Prefer specific mapping for TS vs JS
+  { kw: [/\btypescript\b|\bts\b/], emoji: "📘" },
+  { kw: [/\bjavascript\b|\bjs\b/], emoji: "✨" },
   { kw: [/\bc\+\+|cpp\b/], emoji: "➕➕" },
   { kw: [/\bgo\b|golang/], emoji: "🐹" },
   { kw: [/\brust\b/], emoji: "🦀" },
   { kw: [/\bruby\b/], emoji: "💎" },
   { kw: [/swift\b/], emoji: "🕊️" },
   { kw: [/php\b/], emoji: "🐘" },
-  { kw: [/scala\b/], emoji: "🟥" },
-  { kw: [/haskell\b/], emoji: "🟪" },
+  { kw: [/scala\b/], emoji: "📐" },
+  { kw: [/haskell\b/], emoji: "🧠" },
   { kw: [/elixir\b/], emoji: "💧" },
   { kw: [/\.net|c#|dotnet/], emoji: "#️⃣" },
   { kw: [/\bc\b(?!\+\+)/], emoji: "🅲" },
   { kw: [/r\b(?!ust)/], emoji: "📊" },
-  { kw: [/julia\b/], emoji: "🟣🟢" },
+  { kw: [/julia\b/], emoji: "🧪" },
   { kw: [/matlab\b/], emoji: "📐" },
   { kw: [/bash|shell|zsh/], emoji: "🐚" },
-  { kw: [/node(\.js)?\b|deno\b|bun\b/], emoji: "🟩" },
+  { kw: [/node(\.js)?\b|deno\b|bun\b/], emoji: "🧩" },
 
   // Frameworks & FE
   { kw: [/react|next\.?js|react hooks/], emoji: "⚛️" },
-  { kw: [/vue|nuxt/], emoji: "🟩" },
+  { kw: [/vue|nuxt/], emoji: "🍃" },
   { kw: [/angular\b/], emoji: "🅰️" },
   { kw: [/spring( boot)?\b/], emoji: "🌱" },
   { kw: [/django|flask|fastapi/], emoji: "🧪" },
-  { kw: [/express\b|koa\b|hapi\b|nest(js)?\b/], emoji: "🧭" },
+  { kw: [/express\b|koa\b|hapi\b|nest(js)?\b/], emoji: "🛣️" },
   { kw: [/svelte|sveltekit/], emoji: "🧡" },
-  { kw: [/solid(js)?/], emoji: "🟦" },
+  { kw: [/solid(js)?/], emoji: "🧊" },
   { kw: [/remix\b/], emoji: "🎛️" },
   { kw: [/astro\b/], emoji: "✨" },
   { kw: [/rails\b/], emoji: "🚆" },
-  { kw: [/laravel\b/], emoji: "🟥" },
+  { kw: [/laravel\b/], emoji: "📜" },
   { kw: [/webpack|rollup|vite|esbuild|parcel/], emoji: "📦" },
   { kw: [/tailwind|css|sass|less/], emoji: "🎨" },
 
@@ -68,7 +70,7 @@ export const EMOJI: Entry[] = [
   { kw: [/mongodb|nosql|dynamo/], emoji: "🍃" },
   { kw: [/kafka|event|stream/], emoji: "🛰️" },
   { kw: [/spark|hadoop|big query|bigquery/], emoji: "🔥" },
-  { kw: [/redis\b/], emoji: "🟥" },
+  { kw: [/redis\b/], emoji: "🧱" },
   { kw: [/elasticsearch|elastic/], emoji: "🔍" },
   { kw: [/neo4j|graph db/], emoji: "🕸️" },
   { kw: [/snowflake\b|redshift\b|bigquery\b/], emoji: "❄️" },
@@ -137,18 +139,76 @@ export const EMOJI: Entry[] = [
 
 export function mapLine(line: string, sec: Section, density: Density): string {
   const l = line.toLowerCase();
-  const hits: string[] = [];
-  for (const e of EMOJI) {
-    if (e.sections && !e.sections.includes(sec)) continue;
-    if (e.kw.some(k => (typeof k === "string" ? l.includes(k) : (k as RegExp).test(l)))) {
-      hits.push(e.emoji);
+
+  // Quick ignore for lines that are just dates/locations
+  const dateLike = /(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b|\b20\d{2}\b|\b\d{4}\b/i;
+  const locationLike = /(remote|berkeley|ca|usa|san\s+francisco|mountain\s+view|new\s+york|bay\s+area)/i;
+  if (
+    !/[a-z]/i.test(l) ||
+    ((dateLike.test(l) || locationLike.test(l)) && !/[a-z]{3,}/i.test(l.replace(dateLike, "").replace(locationLike, "")))
+  ) {
+    return "";
+  }
+
+  // Tokenization: skills map per token; others map per line
+  const skillTokens = sec === "skills"
+    ? l.split(/[;,\\/|•]+|\s{2,}/g).map(s => s.trim()).filter(Boolean)
+    : [l];
+
+  type ScoreItem = { emoji: string; score: number; tag?: string };
+  const scores = new Map<string, ScoreItem>();
+  const add = (emoji: string, s: number) => {
+    const prev = scores.get(emoji)?.score ?? 0;
+    if (s > prev) scores.set(emoji, { emoji, score: s });
+  };
+
+  const testOne = (text: string, e: Entry) => {
+    if (e.sections && !e.sections.includes(sec)) return;
+    for (const k of e.kw) {
+      if (k instanceof RegExp) {
+        if (k.test(text)) add(e.emoji, Math.max(3, scores.get(e.emoji)?.score ?? 0));
+      } else {
+        const esc = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const rx = new RegExp(`\\b${esc}\\b`, "i");
+        if (rx.test(text)) add(e.emoji, 3);
+        else if (text.includes(k)) add(e.emoji, Math.max(2, scores.get(e.emoji)?.score ?? 0));
+      }
     }
+  };
+
+  for (const t of skillTokens) {
+    for (const e of EMOJI) testOne(t, e);
   }
-  if (hits.length === 0) {
-    if (sec === "experience") hits.push("🏢");
-    else if (sec === "skills") hits.push("🧰");
-    else if (sec === "projects") hits.push("🧪");
+
+  // Demote base languages when frameworks are present
+  const frameworks = new Set(["⚛️","🍃","🅰️","🧡","🧊","🌱","🧪","🛣️","🎛️","🚆","📦"]);
+  const hasFramework = Array.from(scores.keys()).some(k => frameworks.has(k));
+  if (hasFramework) {
+    scores.delete("✨"); // JavaScript
+    scores.delete("📘"); // TypeScript
+    if (scores.has("🌱")) scores.delete("☕️"); // Spring -> drop Java
+    if (scores.has("🧪")) scores.delete("🐍"); // Django/Flask/FastAPI -> drop Python
   }
-  const cap = density === "minimal" ? 1 : density === "medium" ? 3 : 6;
-  return Array.from(new Set(hits)).slice(0, cap).join(" ");
+
+  // Fallbacks by section
+  if (scores.size === 0) {
+    if (sec === "experience") add("🏢", 1);
+    else if (sec === "skills") add("🧰", 1);
+    else if (sec === "projects") add("🧪", 1);
+  }
+
+  // Section-aware caps
+  const cap = (() => {
+    if (sec === "skills") return density === "minimal" ? 3 : density === "medium" ? 5 : 7;
+    if (sec === "contact") return density === "minimal" ? 2 : density === "medium" ? 3 : 4;
+    if (sec === "experience" || sec === "projects") return density === "minimal" ? 1 : density === "medium" ? 2 : 3;
+    return density === "minimal" ? 1 : density === "medium" ? 3 : 6;
+  })();
+
+  return Array.from(scores.values())
+    .sort((a, b) => b.score - a.score)
+    .map(s => s.emoji)
+    .filter((v, i, a) => a.indexOf(v) === i)
+    .slice(0, cap)
+    .join(" ");
 }
