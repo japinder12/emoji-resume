@@ -1,19 +1,28 @@
-import * as pdfjsLib from "pdfjs-dist";
-import "pdfjs-dist/build/pdf.worker.entry";
+import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
+
+// Point pdf.js at its worker using a URL handled by Vite
+GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
 
 export async function pdfToText(file: File): Promise<string> {
-  const buf = await file.arrayBuffer();
-  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-  const parts: string[] = [];
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
+  const buffer = await file.arrayBuffer();
+  const pdfDoc = await getDocument({ data: buffer }).promise;
+  const textParts: string[] = [];
+
+  for (let pageNumber = 1; pageNumber <= pdfDoc.numPages; pageNumber++) {
+    const page = await pdfDoc.getPage(pageNumber);
     const content = await page.getTextContent();
-    const line = (content.items as any[])
-      .map((it: any) => ("str" in it ? it.str : ""))
+
+    const line = (content.items as { str: string }[])
+      .map((item) => item.str)
       .join(" ");
-    parts.push(line);
+
+    textParts.push(line);
   }
-  return parts
+
+  return textParts
     .join("\n")
     .replace(/\u2022/g, "\n• ")
     .replace(/\s{2,}/g, " ")
