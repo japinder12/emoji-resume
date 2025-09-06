@@ -179,7 +179,6 @@ export default function App() {
               <Card
                 ref={cardRef}
                 text={emojiText}
-                theme={theme}
                 showWatermark={showWatermark}
               />
               <div className="actions">
