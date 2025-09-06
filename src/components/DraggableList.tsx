@@ -28,7 +28,7 @@ export default function DraggableList({
             onDragOver={onDragOver(i)}
             onDrop={onDrop}
             className="p-2 flex items-start gap-2 cursor-grab hover:bg-slate-50">
-          <span className="opacity-60">≡</span>
+          <span className="opacity-50">≡</span>
           <input
             value={l}
             onChange={e => {
