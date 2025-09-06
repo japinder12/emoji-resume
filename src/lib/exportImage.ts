@@ -15,17 +15,26 @@ export async function exportCardPNG(node: HTMLElement) {
 
   return new Promise<void>((resolve, reject) => {
     canvas.toBlob((blob) => {
-      if (!blob) return reject(new Error("Failed to create PNG blob"));
-      const url = URL.createObjectURL(blob);
+      let href: string | null = null;
+      if (blob) {
+        href = URL.createObjectURL(blob);
+      } else {
+        // Fallback for browsers that return null from toBlob
+        try {
+          href = canvas.toDataURL("image/png");
+        } catch (e) {
+          reject(new Error("Failed to create PNG"));
+          return;
+        }
+      }
       const a = document.createElement("a");
-      a.href = url;
+      a.href = href!;
       a.download = "cvmoji.png";
       document.body.appendChild(a);
       a.click();
       a.remove();
-      URL.revokeObjectURL(url);
+      if (blob && href.startsWith("blob:")) URL.revokeObjectURL(href);
       resolve();
     }, "image/png");
   });
 }
-

@@ -16,8 +16,11 @@ const Card = forwardRef<HTMLDivElement, Props>(({ text, showWatermark }, ref) =>
       {text || "📋 Paste or upload your resume to preview"}
 
       {showWatermark && (
-        <div className={clsx("absolute bottom-2 right-3 text-xs opacity-70 font-sans")}>        
-          cvmoji
+        <div className="wm" aria-hidden>
+          <div className="wm-pill wm-auto font-sans">
+            <span className="wm-emoji">💻</span>
+            <span>cvmoji</span>
+          </div>
         </div>
       )}
     </div>

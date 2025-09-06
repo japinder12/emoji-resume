@@ -212,6 +212,8 @@ button { background: white; }
 .wm-light { background: rgba(255,255,255,.9); color: #0f172a; }
 .wm-dark { background: rgba(30,41,59,.9); color: #e2e8f0; border-color: rgba(255,255,255,.15); }
 .wm-emoji { filter: saturate(1.1); }
+/* Auto theme via CSS variables */
+.wm-auto { background: var(--surface); color: var(--text); border-color: var(--border); }
 
 /* Lines list layout (non-draggable) */
 .list { border: 1px solid var(--border); border-radius: .75rem; background: var(--surface); overflow: auto; color: var(--text); }

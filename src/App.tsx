@@ -83,11 +83,17 @@ export default function App() {
 
   const onExport = async () => {
     if (!cardRef.current) return;
-    setShowWatermark(true); // show domain watermark for export
-    await new Promise((r) => setTimeout(r, 50)); // ensure DOM updates
-    await exportCardPNG(cardRef.current);
-    setShowWatermark(false); // hide in live UI
-    toast("PNG exported");
+    try {
+      setShowWatermark(true); // show domain watermark for export
+      await new Promise((r) => setTimeout(r, 50)); // ensure DOM updates
+      await exportCardPNG(cardRef.current);
+      toast("PNG exported");
+    } catch (e) {
+      console.error(e);
+      toast("Export failed");
+    } finally {
+      setShowWatermark(false); // hide in live UI
+    }
   };
 
   const onCopy = async () => {
