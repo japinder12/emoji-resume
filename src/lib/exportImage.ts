@@ -52,7 +52,7 @@ export async function exportCardPNG(node: HTMLElement) {
         // Fallback for browsers that return null from toBlob
         try {
           href = composed.toDataURL("image/png");
-        } catch (e) {
+        } catch {
           reject(new Error("Failed to create PNG"));
           return;
         }

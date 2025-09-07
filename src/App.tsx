@@ -8,6 +8,7 @@ import Toast, { toast } from "./components/Toast";
 import { pdfToText } from "./lib/pdf";
 import { toEmojiCardFromLines, toLines } from "./lib/parse";
 import { exportCardPNG } from "./lib/exportImage";
+import { exportCardSVG } from "./lib/exportCardSVG";
 import { hashToState, stateToHash } from "./lib/link";
 
 const SAMPLE = `Japinder Narula — Software Engineer
@@ -98,6 +99,21 @@ export default function App() {
     }
   };
 
+  const onExportSVG = async () => {
+    if (!cardRef.current) return;
+    try {
+      setShowWatermark(true);
+      await new Promise((r) => setTimeout(r, 50));
+      await exportCardSVG(cardRef.current);
+      toast("SVG exported");
+    } catch (e) {
+      console.error(e);
+      toast("Export failed");
+    } finally {
+      setShowWatermark(false);
+    }
+  };
+
   const onCopy = async () => {
     await navigator.clipboard.writeText(emojiText);
     toast("Emojis copied");
@@ -173,6 +189,7 @@ export default function App() {
               theme={theme}
               setTheme={setTheme}
               onExport={onExport}
+              onExportSVG={onExportSVG}
               onCopy={onCopy}
               onShare={onShare}
               showActions={false}
@@ -204,6 +221,14 @@ export default function App() {
                     <path d="M5 12v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" stroke="currentColor" strokeWidth="1.6"/>
                   </svg>
                   <span>Export PNG</span>
+                </button>
+                <button onClick={onExportSVG} className="btn btn-sm btn-pill" aria-label="Export SVG">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+                    <path d="M12 3v10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                    <path d="M8 7l4-4 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M5 12v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" stroke="currentColor" strokeWidth="1.6"/>
+                  </svg>
+                  <span>Export SVG</span>
                 </button>
                 <button onClick={onShare} className="btn btn-sm btn-pill" aria-label="Copy permalink">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>

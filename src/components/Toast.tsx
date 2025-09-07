@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 type ToastItem = { id: number; text: string };
 
 let pushToast: ((text: string) => void) | null = null;
+// eslint-disable-next-line react-refresh/only-export-components
 export function toast(text: string) {
   pushToast?.(text);
 }
