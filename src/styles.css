@@ -147,12 +147,21 @@ button { background: white; }
 .panel-title { font-size: .9rem; margin-left: 4px; }
 .panel-body { padding: .6rem; }
 
-/* Actions row under card */
-.actions { display: grid; grid-template-columns: 1fr; gap: .5rem; width: 100%; }
-@media (min-width: 960px) {
-  .actions { grid-template-columns: repeat(4, 1fr); }
+/* Actions rows under card */
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: .4rem;
+  width: auto;
+  margin-top: .25rem;
+  justify-content: center;
 }
-.btn-pill { border-radius: 999px; }
+.actions .btn {
+  width: auto;
+  justify-content: center;
+  padding: .3rem .55rem;
+  font-size: .8rem;
+}
 
 /* Reorder list styling (compact) */
 .list { border: 1px solid var(--border); border-radius: .7rem; background: var(--surface); overflow: auto; list-style: none; padding: 0; margin: 0; color: var(--text); }

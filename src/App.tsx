@@ -214,6 +214,14 @@ export default function App() {
                   </svg>
                   <span>Copy emojis</span>
                 </button>
+                <button onClick={onShare} className="btn btn-sm btn-pill" aria-label="Copy permalink">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+                    <path d="M4 12a5 5 0 0 1 5-5h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+                    <path d="M20 12a5 5 0 0 1-5 5h-2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+                    <path d="M8 12h8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+                  </svg>
+                  <span>Copy link</span>
+                </button>
                 <button onClick={onExport} className="btn btn-sm btn-pill" aria-label="Export PNG">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
                     <path d="M12 3v10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
@@ -230,14 +238,7 @@ export default function App() {
                   </svg>
                   <span>Export SVG</span>
                 </button>
-                <button onClick={onShare} className="btn btn-sm btn-pill" aria-label="Copy permalink">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-                    <path d="M4 12a5 5 0 0 1 5-5h2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-                    <path d="M20 12a5 5 0 0 1-5 5h-2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-                    <path d="M8 12h8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-                  </svg>
-                  <span>Copy link</span>
-                </button>
+
               </div>
             </div>
           </section>
