@@ -11,6 +11,20 @@ Turn resume text or PDFs into a clean, sharable emoji card. Paste your resume, t
 - Quick actions: copy emojis, export PNG, and share a permalink (state in URL hash).
 - Friendly parsing: handles single-line blobs and PDFs; splits on bullets, pipes, semicolons, and common section headers.
 
+## Next Steps
+- Diversify emoji-mapping for more industries/roles.
+
+## How It Works
+- Parser splits text into logical lines (bullets/pipes/section headers), then maps tech/keywords to emojis with strong/medium scoring and section caps.
+- Frameworks demote base language emojis to keep output specific.
+- Emojis are chunked into balanced rows by density before rendering.
+
+## Keyboard Shortcuts
+- Copy emojis: ⌘/Ctrl+Shift+C
+- Export PNG: ⌘/Ctrl+E
+- Copy permalink: ⌘/Ctrl+Shift+S
+
+
 ## Quick Start
 
 Dev
@@ -27,16 +41,3 @@ npm run build
 Deploy
 - Vercel (recommended): import repo, framework = Vite.
 - Any static host: serve `dist/` after build.
-
-## How It Works
-- Parser splits text into logical lines (bullets/pipes/section headers), then maps tech/keywords to emojis with strong/medium scoring and section caps.
-- Frameworks demote base language emojis to keep output specific.
-- Emojis are chunked into balanced rows by density before rendering.
-
-## Keyboard Shortcuts
-- Copy emojis: ⌘/Ctrl+Shift+C
-- Export PNG: ⌘/Ctrl+E
-- Copy permalink: ⌘/Ctrl+Shift+S
-
-## Acknowledgements
-- PDF text extraction via pdf.js.
