@@ -2,11 +2,11 @@
 
 Turn resume text or PDFs into a clean, sharable emoji card. Paste your resume, tweak the lines, and export a crisp PNG — perfect for profiles, portfolios, and quick intros.
 
-## My Emoji Resume
-- Here is my CV in emoji form.
-    - ![cvmoji resume](./cvmoji.png)
-- Screenshot of the site
-    - ![cvmoji screenshot](./cvmoji-ss.png)
+
+![cvmoji resume](./cvmoji.png)
+
+### Screenshot of the site
+![cvmoji screenshot](./cvmoji-ss.png)
 
 
 
