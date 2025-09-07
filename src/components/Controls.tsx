@@ -4,6 +4,7 @@ export function Controls({
   theme,
   setTheme,
   onExport,
+  onExportSVG,
   onCopy,
   onShare,
   showActions = true,
@@ -13,6 +14,7 @@ export function Controls({
   theme: "light" | "dark";
   setTheme: (t: "light" | "dark") => void;
   onExport: () => void | Promise<void>;
+  onExportSVG: () => void | Promise<void>;
   onCopy: () => void | Promise<void>;
   onShare: () => void | Promise<void>;
   showActions?: boolean;
@@ -86,6 +88,14 @@ export function Controls({
               <path d="M5 12v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" stroke="currentColor" strokeWidth="1.6"/>
             </svg>
             <span>Export PNG</span>
+          </button>
+          <button onClick={onExportSVG} className="btn btn-sm" aria-label="Export SVG">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M12 3v10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+              <path d="M8 7l4-4 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5 12v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" stroke="currentColor" strokeWidth="1.6"/>
+            </svg>
+            <span>Export SVG</span>
           </button>
           <button onClick={onShare} className="btn btn-sm" aria-label="Copy permalink">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>

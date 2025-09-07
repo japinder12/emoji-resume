@@ -150,7 +150,7 @@ button { background: white; }
 /* Actions row under card */
 .actions { display: grid; grid-template-columns: 1fr; gap: .5rem; width: 100%; }
 @media (min-width: 960px) {
-  .actions { grid-template-columns: repeat(3, 1fr); }
+  .actions { grid-template-columns: repeat(4, 1fr); }
 }
 .btn-pill { border-radius: 999px; }
 
