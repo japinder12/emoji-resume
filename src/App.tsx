@@ -3,8 +3,8 @@ import Card from "./components/Card";
 import { Controls } from "./components/Controls";
 import Legend from "./components/Legend";
 import DraggableList from "./components/DraggableList";
-import Toast, { toast } from "./components/Toast";
-
+import Toast from "./components/Toast";
+import { toast } from "./lib/toast";
 import { pdfToText } from "./lib/pdf";
 import { toEmojiCardFromLines, toLines } from "./lib/parse";
 import { exportCardPNG } from "./lib/exportImage";

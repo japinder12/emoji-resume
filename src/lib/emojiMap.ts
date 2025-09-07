@@ -7,7 +7,7 @@ export const EMOJI: Entry[] = [
   // Roles
   { kw: [/software engineer|developer|swe|backend|back[- ]?end|front[- ]?end|full[- ]?stack|engineer\b|engineering/], emoji: "🧑‍💻" },
   { kw: [/data scientist|ml engineer|ai|machine learning/], emoji: "🤖" },
-  { kw: [/mobile|ios|android|flutter|react native/], emoji: "📱" },
+  { kw: [/mobile|ios|android|flutter/], emoji: "📱" },
   { kw: [/devops|sre|platform/], emoji: "🛠️" },
   { kw: [/security|infosec|appsec|iam/], emoji: "🛡️" },
   { kw: [/designer|ui\/ux|product design/], emoji: "🎨" },
@@ -57,6 +57,12 @@ export const EMOJI: Entry[] = [
   { kw: [/webpack|rollup|vite|esbuild|parcel/], emoji: "📦" },
   { kw: [/tailwind|css|sass|less/], emoji: "🎨" },
 
+  // Mobile frameworks
+  { kw: [/\bswiftui\b/], emoji: "🕊️" },
+  { kw: [/\bjetpack compose\b/], emoji: "🧵" },
+  { kw: [/\breact native\b/], emoji: "⚛️" },
+
+
   // APIs & Back-end
   { kw: [/\bapi\b|rest\b|graphql|grpc/], emoji: "🔌" },
   { kw: [/microservices|service[- ]oriented/], emoji: "🧩" },
@@ -93,8 +99,14 @@ export const EMOJI: Entry[] = [
   { kw: [/logging|logstash|loki\b/], emoji: "🧾" },
   { kw: [/message queue|mq\b|rabbitmq|sqs|sns|pub\/sub|pubsub/], emoji: "📮" },
 
+  // Tooling / Design
+  { kw: [/\bfigma\b/], emoji: "🎨" },
+  { kw: [/\bstorybook\b/], emoji: "📗" },
+  { kw: [/\bcypress\b/], emoji: "✅" },
+  { kw: [/\bjest\b/], emoji: "✅" },
+
   // Testing / Quality
-  { kw: [/unit test|jest|pytest|cypress|playwright|integration test/], emoji: "✅" },
+  { kw: [/unit test|pytest|playwright|integration test/], emoji: "✅" },
   { kw: [/performance|latency|throughput/], emoji: "⚡" },
   { kw: [/lint|eslint|prettier|static analysis/], emoji: "🧹" },
   { kw: [/feature flag|launchdarkly|split\.io/], emoji: "🚩" },
@@ -126,17 +138,18 @@ export const EMOJI: Entry[] = [
   { kw: [/linkedin\.com|linkedin\b/], emoji: "🔗", sections: ["contact","header"] },
   { kw: [/portfolio|website|www\.|https?:\/\//], emoji: "🌐", sections: ["contact","header"] },
 
-  // Domains / Industries
-  { kw: [/fintech|payments|bank|trading|defi/], emoji: "💸" },
-  { kw: [/healthcare|med|clinic|hipaa/], emoji: "🏥" },
-  { kw: [/e[- ]?commerce|shopify|storefront/], emoji: "🛒" },
-  { kw: [/gaming|game dev|unity|unreal/], emoji: "🎮" },
-  { kw: [/maps|geospat|gis|geocod/], emoji: "🗺️" },
-  { kw: [/media|video|streaming|vod/], emoji: "🎬" },
-  { kw: [/iot|embedded|firmware/], emoji: "📟" },
-  { kw: [/robotics/], emoji: "🤖" },
-  { kw: [/edtech|education tech/], emoji: "🧪" },
-  { kw: [/ads|advertising|adtech|campaign/], emoji: "📣" },
+// Domains / Industries
+  { kw: [/\bfintech\b/, /\bpayments?\b/, /\bbank(ing)?\b/, /\btrading\b/, /\bdefi\b/], emoji: "💸" },
+  { kw: [/\bhealthcare\b/, /\bmed(ical)?\b/, /\bclinic\b/, /\bhipaa\b/], emoji: "🏥" },
+  { kw: [/\be[- ]?commerce\b/, /\bshopify\b/, /\bstorefront\b/], emoji: "🛒" },
+  { kw: [/\bgaming\b/, /\bgame dev\b/, /\bunity\b/, /\bunreal\b/], emoji: "🎮" },
+  { kw: [/\bmaps?\b/, /\bgeospat\w*\b/, /\bgis\b/, /\bgeocod\w*\b/], emoji: "🗺️" },
+  { kw: [/\bmedia\b/, /\bvideo\b/, /\bstreaming\b/, /\bvod\b/], emoji: "🎬" },
+  { kw: [/\biot\b/, /\bembedded\b/, /\bfirmware\b/], emoji: "📟" },
+  { kw: [/\brobotics\b/], emoji: "🤖" },
+  { kw: [/\bedtech\b/, /\beducation tech\b/], emoji: "🧪" },
+  { kw: [/\bads?\b/, /\badvertising\b/, /\badtech\b/, /\bcampaign\b/], emoji: "📣" },
+  { kw: [/\bgovernment\b/, /\bpublic sector\b/, /\bfederal\b/, /\bcivic\b/, /\bgovt\b/, /\bgov\b/], emoji: "🏛️" },
 ];
 
 export function mapLine(line: string, sec: Section, density: Density): string {
@@ -157,6 +170,16 @@ export function mapLine(line: string, sec: Section, density: Density): string {
     ? l.split(/[;,\\/|•]+|\s{2,}/g).map(s => s.trim()).filter(Boolean)
     : [l];
 
+
+  // Section-aware caps
+  const cap = (() => {
+    if (sec === "skills") return density === "extra" ? 6 : 4;
+    if (sec === "experience" || sec === "projects") return density === "extra" ? 3 : 2;
+    if (sec === "education") return 2;
+    if (sec === "contact") return 4;
+    return density === "extra" ? 6 : 4;
+  })();
+
   type ScoreItem = { emoji: string; score: number; tag?: string };
   const scores = new Map<string, ScoreItem>();
   const add = (emoji: string, s: number) => {
@@ -168,12 +191,12 @@ export function mapLine(line: string, sec: Section, density: Density): string {
     if (e.sections && !e.sections.includes(sec)) return;
     for (const k of e.kw) {
       if (k instanceof RegExp) {
-        if (k.test(text)) add(e.emoji, Math.max(3, scores.get(e.emoji)?.score ?? 0));
+        if (k.test(text)) add(e.emoji, 3);
       } else {
         const esc = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
         const rx = new RegExp(`\\b${esc}\\b`, "i");
         if (rx.test(text)) add(e.emoji, 3);
-        else if (text.includes(k)) add(e.emoji, Math.max(2, scores.get(e.emoji)?.score ?? 0));
+        else if (text.includes(k)) add(e.emoji, 2);
       }
     }
   };
@@ -182,14 +205,31 @@ export function mapLine(line: string, sec: Section, density: Density): string {
     for (const e of EMOJI) testOne(t, e);
   }
 
-  // Demote base languages when frameworks are present
-  const frameworks = new Set(["⚛️","🍃","🅰️","🧡","🧊","🌱","🧪","🛣️","🎛️","🚆","📦"]);
-  const hasFramework = Array.from(scores.keys()).some(k => frameworks.has(k));
-  if (hasFramework) {
-    scores.delete("✨"); // JavaScript
-    scores.delete("📘"); // TypeScript
-    if (scores.has("🌱")) scores.delete("☕️"); // Spring -> drop Java
-    if (scores.has("🧪")) scores.delete("🐍"); // Django/Flask/FastAPI -> drop Python
+  // Suppress generic mobile when specific frameworks are present
+  if (/\bswiftui\b/i.test(l) || /\bjetpack compose\b/i.test(l) || /\breact native\b/i.test(l)) {
+    scores.delete("📱");
+  }
+
+  // Demote base languages when frameworks are present and over cap
+  if (scores.size > cap) {
+    const demote = (emoji: string) => {
+      const item = scores.get(emoji);
+      if (item) item.score = Math.min(item.score, 1);
+    };
+    const hasAngular = /angular\b/.test(l);
+    const hasVue = /(vue|nuxt)/.test(l);
+    const hasReact = /(react|next\.?js|remix\b)/.test(l);
+    const hasRails = /rails\b/.test(l);
+    const hasSpring = /spring( boot)?\b/.test(l);
+    const hasDjango = /(django|flask|fastapi)/.test(l);
+    const hasExpress = /(express\b|koa\b|hapi\b|nest(js)?\b)/.test(l);
+    if (hasAngular || hasVue || hasReact || hasExpress) {
+      demote("📘");
+      demote("✨");
+    }
+    if (hasRails) demote("💎");
+    if (hasSpring) demote("☕️");
+    if (hasDjango) demote("🐍");
   }
 
   // Fallbacks by section
@@ -198,15 +238,7 @@ export function mapLine(line: string, sec: Section, density: Density): string {
     else if (sec === "skills") add("🧰", 1);
     else if (sec === "projects") add("🧪", 1);
   }
-
-  // Section-aware caps
-  const cap = (() => {
-    if (sec === "skills") return density === "minimal" ? 3 : density === "medium" ? 5 : 7;
-    if (sec === "contact") return density === "minimal" ? 2 : density === "medium" ? 3 : 4;
-    if (sec === "experience" || sec === "projects") return density === "minimal" ? 1 : density === "medium" ? 2 : 3;
-    return density === "minimal" ? 1 : density === "medium" ? 3 : 6;
-  })();
-
+  
   return Array.from(scores.values())
     .sort((a, b) => b.score - a.score)
     .map(s => s.emoji)
