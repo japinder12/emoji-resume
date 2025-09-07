@@ -42,9 +42,11 @@ export default function App() {
     } catch { /* empty */ }
   }, []);
 
-  // Keep lines in sync with textarea edits
+  
+  // Keep lines in sync with textarea edits (debounced for typing)
   useEffect(() => {
-    setLines(toLines(raw));
+    const id = setTimeout(() => setLines(toLines(raw)), 150);
+    return () => clearTimeout(id);
   }, [raw]);
 
   // Dynamic theme color for mobile address bar + apply site-wide theme
