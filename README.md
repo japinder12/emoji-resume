@@ -2,6 +2,14 @@
 
 Turn resume text or PDFs into a clean, sharable emoji card. Paste your resume, tweak the lines, and export a crisp PNG — perfect for profiles, portfolios, and quick intros.
 
+## My Emoji Resume
+- Here is my CV in emoji form.
+    - ![cvmoji resume](./cvmoji.png)
+- Screenshot of the site
+    - ![cvmoji screenshot](./cvmoji-ss.png)
+
+
+
 ## Highlights
 - Meaningful mapping: frameworks and tools beat base languages (⚛️ over ✨), Redis is 🧱 not a red square.
 - Section-aware density: more room in Skills; concise lines in Experience/Projects.
@@ -10,9 +18,6 @@ Turn resume text or PDFs into a clean, sharable emoji card. Paste your resume, t
 - Responsive: works on mobile.
 - Quick actions: copy emojis, export PNG, and share a permalink (state in URL hash).
 - Friendly parsing: handles single-line blobs and PDFs; splits on bullets, pipes, semicolons, and common section headers.
-
-## Next Steps
-- Diversify emoji-mapping for more industries/roles.
 
 ## How It Works
 - Parser splits text into logical lines (bullets/pipes/section headers), then maps tech/keywords to emojis with strong/medium scoring and section caps.
