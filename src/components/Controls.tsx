@@ -1,6 +1,4 @@
 export function Controls({
-  density,
-  setDensity,
   theme,
   setTheme,
   onExport,
@@ -9,8 +7,6 @@ export function Controls({
   onShare,
   showActions = true,
 }: {
-  density: "minimal" | "medium" | "extra";
-  setDensity: (d: "minimal" | "medium" | "extra") => void;
   theme: "light" | "dark";
   setTheme: (t: "light" | "dark") => void;
   onExport: () => void | Promise<void>;
@@ -21,35 +17,7 @@ export function Controls({
 }) {
   return (
     <div className="control-row">
-      <div className="control-group" aria-label="Density">
-        <span className="control-label">Density</span>
-        <div className="seg seg-sm" role="tablist" aria-label="Density">
-          <button
-            type="button"
-            className={`seg-btn ${density === "minimal" ? "seg-active" : ""}`}
-            aria-pressed={density === "minimal"}
-            onClick={() => setDensity("minimal")}
-          >
-            minimal
-          </button>
-          <button
-            type="button"
-            className={`seg-btn ${density === "medium" ? "seg-active" : ""}`}
-            aria-pressed={density === "medium"}
-            onClick={() => setDensity("medium")}
-          >
-            medium
-          </button>
-          <button
-            type="button"
-            className={`seg-btn ${density === "extra" ? "seg-active" : ""}`}
-            aria-pressed={density === "extra"}
-            onClick={() => setDensity("extra")}
-          >
-            extra
-          </button>
-        </div>
-      </div>
+      {/* Density removed */}
       <div className="control-group" aria-label="Theme">
         <div className="pill" role="tablist" aria-label="Theme toggle">
           <button

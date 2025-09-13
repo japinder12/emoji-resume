@@ -6,7 +6,7 @@ type Entry = { kw: (string | RegExp)[]; emoji: string; sections?: Section[] };
 export const EMOJI: Entry[] = [
   // Roles
   { kw: [/software engineer|developer|swe|backend|back[- ]?end|front[- ]?end|full[- ]?stack|engineer\b|engineering/], emoji: "🧑‍💻" },
-  { kw: [/data scientist|ml engineer|ai|machine learning/], emoji: "🤖" },
+  { kw: [/\bdata scientist\b|\bml engineer\b|\bml\b|\bai\b|\bmachine learning\b/], emoji: "🤖", sections: ["skills","experience","projects","education"] },
   { kw: [/mobile|ios|android|flutter/], emoji: "📱" },
   { kw: [/devops|sre|platform/], emoji: "🛠️" },
   { kw: [/security|infosec|appsec|iam/], emoji: "🛡️" },
@@ -35,11 +35,12 @@ export const EMOJI: Entry[] = [
   { kw: [/elixir\b/], emoji: "💧" },
   { kw: [/\.net|c#|dotnet/], emoji: "#️⃣" },
   { kw: [/\bc\b(?!\+\+)/], emoji: "🅲" },
-  { kw: [/r\b(?!ust)/], emoji: "📊" },
+  { kw: [/rust/], emoji: "⚙️" },
   { kw: [/julia\b/], emoji: "🧪" },
   { kw: [/matlab\b/], emoji: "📐" },
   { kw: [/bash|shell|zsh/], emoji: "🐚" },
   { kw: [/node(\.js)?\b|deno\b|bun\b/], emoji: "🧩" },
+  { kw: [/\bgit\b/], emoji: "🧰" },
 
   // Frameworks & FE
   { kw: [/react|next\.?js|react hooks/], emoji: "⚛️" },
@@ -82,7 +83,9 @@ export const EMOJI: Entry[] = [
   { kw: [/snowflake\b|redshift\b|bigquery\b/], emoji: "❄️" },
   { kw: [/databricks\b|lakehouse/], emoji: "🏞️" },
   { kw: [/airflow\b|dagster\b|prefect\b/], emoji: "🪂" },
-  { kw: [/etl\b|elt\b|pipeline/], emoji: "🧵" },
+  { kw: [/etl\b|elt\b|pipeline/], emoji: "📊" },
+  { kw: [/\blstm\b/], emoji: "🤖" },
+  { kw: [/\bmusic\b|\bsound\b|\baudio\b/], emoji: "🎵" },
 
   // Cloud & Infra
   { kw: [/aws|s3|ec2|lambda/], emoji: "☁️" },
@@ -136,7 +139,7 @@ export const EMOJI: Entry[] = [
   { kw: [/\+?\d[\d\s().-]{7,}\d/], emoji: "📞", sections: ["contact","header"] },
   { kw: [/github\.com|github\b/], emoji: "🐙", sections: ["contact","header","projects"] },
   { kw: [/linkedin\.com|linkedin\b/], emoji: "🔗", sections: ["contact","header"] },
-  { kw: [/portfolio|website|www\.|https?:\/\//], emoji: "🌐", sections: ["contact","header"] },
+  { kw: [/portfolio|website|www\.|https?:\/\//], emoji: "🌐", sections: ["contact","header","projects"] },
 
 // Domains / Industries
   { kw: [/\bfintech\b/, /\bpayments?\b/, /\bbank(ing)?\b/, /\btrading\b/, /\bdefi\b/], emoji: "💸" },
@@ -171,13 +174,24 @@ export function mapLine(line: string, sec: Section, density: Density): string {
     : [l];
 
 
-  // Section-aware caps
+  // Section-aware caps — boost "medium" to show more
   const cap = (() => {
-    if (sec === "skills") return density === "extra" ? 6 : 4;
-    if (sec === "experience" || sec === "projects") return density === "extra" ? 3 : 2;
-    if (sec === "education") return 2;
-    if (sec === "contact") return 4;
-    return density === "extra" ? 6 : 4;
+    if (sec === "skills") {
+      if (density === "minimal") return 3;
+      if (density === "medium") return 8; // show more on medium
+      return 10; // extra
+    }
+    if (sec === "experience" || sec === "projects") {
+      if (density === "minimal") return 2;
+      if (density === "medium") return 6; // show more on medium
+      return 7; // extra
+    }
+    if (sec === "education") return density === "minimal" ? 1 : density === "medium" ? 4 : 5;
+    if (sec === "contact") return density === "minimal" ? 2 : density === "medium" ? 6 : 7;
+    // default
+    if (density === "minimal") return 3;
+    if (density === "medium") return 7;
+    return 9;
   })();
 
   type ScoreItem = { emoji: string; score: number; tag?: string };

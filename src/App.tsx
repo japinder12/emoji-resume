@@ -12,9 +12,8 @@ import { exportCardSVG } from "./lib/exportCardSVG";
 import { hashToState, stateToHash } from "./lib/link";
 
 const SAMPLE = `Japinder Narula — Software Engineer
-Summary: Backend-leaning full-stack developer
 Skills: Java, Kotlin, Python, React, SQL, Azure, Git
-Experience: LegalZoom — SWE Intern
+Experience: LegalZoom — SWE Intern — Kotlin, Spring Boot, REST, JPA, SQL
 Projects: LSTM music generator; Portfolio website
 Education: B.S. Electrical Engineering and Computer Science
 Contact: github.com/japinder12 • website • email`;
@@ -22,7 +21,6 @@ Contact: github.com/japinder12 • website • email`;
 export default function App() {
   const [raw, setRaw] = useState(SAMPLE);
   const [lines, setLines] = useState<string[]>(toLines(SAMPLE));
-  const [density, setDensity] = useState<"minimal" | "medium" | "extra">("medium");
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [showWatermark, setShowWatermark] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -32,7 +30,7 @@ export default function App() {
     const restored = hashToState(location.hash);
     if (restored) {
       setTheme(restored.theme);
-      setDensity(restored.density);
+      // density removed (fixed)
       setRaw(restored.raw);
       return;
     }
@@ -77,11 +75,11 @@ export default function App() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lines, theme, density]);
+  }, [lines, theme]);
 
   const emojiText = useMemo(
-    () => toEmojiCardFromLines(lines, density),
-    [lines, density]
+    () => toEmojiCardFromLines(lines, "medium"),
+    [lines]
   );
 
   const onExport = async () => {
@@ -121,7 +119,7 @@ export default function App() {
 
   const onShare = async () => {
     const url = new URL(location.href);
-    url.hash = stateToHash({ raw, theme, density });
+    url.hash = stateToHash({ raw, theme });
     history.replaceState({}, "", url.toString());
     await navigator.clipboard.writeText(url.toString());
     toast("Permalink copied");
@@ -184,8 +182,6 @@ export default function App() {
             </div>
 
             <Controls
-              density={density}
-              setDensity={setDensity}
               theme={theme}
               setTheme={setTheme}
               onExport={onExport}

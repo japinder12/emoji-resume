@@ -37,7 +37,26 @@ export function toEmojiCardFromLines(lines: string[], density: Density) {
   // Preserve 1:1 alignment: one emoji row per input line
   // Do not filter out empty results; empty strings keep blank lines
   const rows = lines.map(line => mapLine(line, detectSection(line), density));
-  // If absolutely no emojis in any line, return empty so UI shows placeholder
-  if (rows.every(r => !r)) return "";
-  return rows.join("\n");
+  // Reduce repetition globally across rows
+  const counts = new Map<string, number>();
+  const limitFor = (emoji: string) => {
+    // Allow more repeats on higher densities
+    const base = density === "minimal" ? 2 : density === "medium" ? 3 : 4;
+    return emoji === "🧑‍💻" ? 1 : base;
+  };
+  const filtered = rows.map(row => {
+    if (!row) return row;
+    const out: string[] = [];
+    for (const t of row.split(/\s+/).filter(Boolean)) {
+      const n = counts.get(t) ?? 0;
+      const lim = limitFor(t);
+      if (n < lim) {
+        out.push(t);
+        counts.set(t, n + 1);
+      }
+    }
+    return out.join(" ");
+  });
+  if (filtered.every(r => !r)) return "";
+  return filtered.join("\n");
 }

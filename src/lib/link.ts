@@ -1,7 +1,7 @@
 export type State = {
   raw: string;
   theme: "light" | "dark";
-  density: "minimal" | "medium" | "extra";
+  // density removed (fixed to medium for back-compat default)
   mode?: "emoji" | "icon"; // back-compat only
 };
 import { compressToBase64, decompressFromBase64 } from "./lz";
@@ -29,11 +29,16 @@ export function hashToState(hash: string): State | null {
       else if (pad === 1) return null; // invalid
       const json = decompressFromBase64(data);
       if (!json) return null;
-      return JSON.parse(json) as State;
+      const obj = JSON.parse(json) as any;
+      // Strip density if present for forward-compat
+      const { density: _omit, ...rest } = obj || {};
+      return rest as State;
     }
     // Legacy: atob(base64) then decodeURIComponent
     const json = decodeURIComponent(atob(h));
-    return JSON.parse(json) as State;
+    const obj = JSON.parse(json) as any;
+    const { density: _omit, ...rest } = obj || {};
+    return rest as State;
   } catch {
     return null;
   }
