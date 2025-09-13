@@ -44,8 +44,6 @@ export function exportCardSVG(node: HTMLElement) {
   const bg = styles.backgroundColor || "#ffffff";
   const fg = styles.color || "#000000";
   const fontFamily = styles.fontFamily || "monospace";
-  // Force square corners in SVG export (no rounding)
-  const radius = 0;
 
   const raw = node.getAttribute("data-text");
   const source = (raw ?? node.innerText).replace(/\r\n/g, "\n");
