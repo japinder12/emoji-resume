@@ -49,6 +49,19 @@ export default function DraggableList({
             }}
             className="list-input list-edit"
           />
+          <button
+            type="button"
+            className="icon-btn"
+            title="Delete line"
+            aria-label="Delete line"
+            onClick={() => {
+              const copy = [...lines];
+              copy.splice(i, 1);
+              setLines(copy);
+            }}
+          >
+            ×
+          </button>
         </li>
       ))}
     </ul>
