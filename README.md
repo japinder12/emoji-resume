@@ -14,6 +14,9 @@ Contact: github.com/japinder12 • website • email
 
 ![cvmoji resume](./cvmoji.png)
 
+### Screenshot of the site
+![cvmoji screenshot](./cvmoji-ss.png)
+
 
 ## Highlights
 - Meaningful mapping: frameworks and tools beat base languages (⚛️ over ✨), Redis is 🧱 not a red square.
