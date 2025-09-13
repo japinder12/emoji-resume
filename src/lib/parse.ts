@@ -48,10 +48,10 @@ export function toLines(text: string): string[] {
 
 export function toEmojiCardFromLines(lines: string[]) {
   // Map each input line to emojis
-  const mapped = lines.map(line => ({
-    sec: detectSection(line),
-    row: mapLine(line, detectSection(line)),
-  })).filter(x => Boolean(x.row));
+  const mapped = lines.map((line, idx) => {
+    const sec = idx === 0 ? "header" as const : detectSection(line);
+    return { sec, row: mapLine(line, sec) };
+  }).filter(x => Boolean(x.row));
 
   // Global repetition cap to avoid spam across the whole card
   const counts = new Map<string, number>();
