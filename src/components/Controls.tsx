@@ -1,8 +1,6 @@
 export function Controls({
   theme,
   setTheme,
-  mode,
-  setMode,
   onExport,
   onExportSVG,
   onCopy,
@@ -11,8 +9,6 @@ export function Controls({
 }: {
   theme: "light" | "dark";
   setTheme: (t: "light" | "dark") => void;
-  mode: "emoji" | "icon";
-  setMode: (m: "emoji" | "icon") => void;
   onExport: () => void | Promise<void>;
   onExportSVG: () => void | Promise<void>;
   onCopy: () => void | Promise<void>;
@@ -21,28 +17,7 @@ export function Controls({
 }) {
   return (
     <div className="control-row">
-      {/* Mode toggle */}
-      <div className="control-group" aria-label="Mode">
-        <span className="control-label">Mode</span>
-        <div className="seg seg-sm" role="tablist" aria-label="Mode">
-          <button
-            type="button"
-            className={`seg-btn ${mode === "emoji" ? "seg-active" : ""}`}
-            aria-pressed={mode === "emoji"}
-            onClick={() => setMode("emoji")}
-          >
-            Emoji
-          </button>
-          <button
-            type="button"
-            className={`seg-btn ${mode === "icon" ? "seg-active" : ""}`}
-            aria-pressed={mode === "icon"}
-            onClick={() => setMode("icon")}
-          >
-            Icon
-          </button>
-        </div>
-      </div>
+      {/* Mode toggle removed */}
       <div className="control-group" aria-label="Theme">
         <div className="pill" role="tablist" aria-label="Theme toggle">
           <button

@@ -47,31 +47,46 @@ export function toLines(text: string): string[] {
 }
 
 export function toEmojiCardFromLines(lines: string[], density: Density) {
-  // Preserve 1:1 alignment: one emoji row per input line
-  // Do not filter out empty results; empty strings keep blank lines
-  const rows = lines.map(line => mapLine(line, detectSection(line), density));
-  // Reduce repetition globally across rows
+  // Map each input line to emojis
+  const mapped = lines.map(line => mapLine(line, detectSection(line), density)).filter(Boolean);
+
+  // Global repetition cap to avoid spam across the whole card
   const counts = new Map<string, number>();
-  const limitFor = (emoji: string) => {
-    // Allow more repeats on higher densities
-    const base = density === "minimal" ? 2 : density === "medium" ? 3 : 4;
-    return emoji === "🧑‍💻" ? 1 : base;
+  const limitFor = (emoji: string) => (emoji === "🧑‍💻" ? 1 : density === "minimal" ? 2 : density === "medium" ? 3 : 4);
+
+  // Helper: admit token if under global cap
+  const admit = (t: string) => {
+    const n = counts.get(t) ?? 0;
+    const lim = limitFor(t);
+    if (n < lim) { counts.set(t, n + 1); return true; }
+    return false;
   };
-  const filtered = rows.map(row => {
-    if (!row) return row;
-    const out: string[] = [];
-    for (const t of row.split(/\s+/).filter(Boolean)) {
-      const n = counts.get(t) ?? 0;
-      const lim = limitFor(t);
-      if (n < lim) {
-        out.push(t);
-        counts.set(t, n + 1);
+
+  const perRow = density === "minimal" ? 4 : density === "medium" ? 6 : 8;
+  const out: string[] = [];
+  const singles: string[] = [];
+
+  for (const row of mapped) {
+    const tokens = row.split(/\s+/).filter(Boolean).filter(admit);
+    if (tokens.length === 0) continue;
+
+    if (tokens.length === 1) {
+      // Accumulate short lines and pack them to reduce over-fragmentation
+      singles.push(tokens[0]);
+      while (singles.length >= perRow) {
+        out.push(singles.splice(0, perRow).join(" "));
       }
+    } else if (tokens.length > perRow) {
+      // Chunk very long lines
+      for (let i = 0; i < tokens.length; i += perRow) {
+        out.push(tokens.slice(i, i + perRow).join(" "));
+      }
+    } else {
+      // Keep multi-token lines as their own row to preserve structure
+      out.push(tokens.join(" "));
     }
-    return out.join(" ");
-  });
-  // Remove empty lines in the final output for a tighter card
-  const compact = filtered.filter(Boolean);
-  if (compact.every(r => !r)) return "";
-  return compact.join("\n");
+  }
+
+  if (singles.length) out.push(singles.join(" "));
+  return out.join("\n");
 }

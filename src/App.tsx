@@ -7,7 +7,6 @@ import Toast from "./components/Toast";
 import { toast } from "./lib/toast";
 import { pdfToText } from "./lib/pdf";
 import { toEmojiCardFromLines, toLines } from "./lib/parse";
-import { toIconText } from "./lib/icons";
 import { exportCardPNG } from "./lib/exportImage";
 import { exportCardSVG } from "./lib/exportCardSVG";
 import { hashToState, stateToHash } from "./lib/link";
@@ -23,7 +22,6 @@ export default function App() {
   const [raw, setRaw] = useState(SAMPLE);
   const [lines, setLines] = useState<string[]>(toLines(SAMPLE));
   const [theme, setTheme] = useState<"light" | "dark">("light");
-  const [mode, setMode] = useState<"emoji" | "icon">("emoji");
   const [showWatermark, setShowWatermark] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -32,7 +30,6 @@ export default function App() {
     const restored = hashToState(location.hash);
     if (restored) {
       setTheme(restored.theme);
-      if (restored.mode === "emoji" || restored.mode === "icon") setMode(restored.mode);
       setRaw(restored.raw);
       return;
     }
@@ -79,16 +76,7 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lines, theme]);
 
-  const emojiText = useMemo(
-    () => toEmojiCardFromLines(lines, "medium"),
-    [lines]
-  );
-
-  const displayText = useMemo(() => {
-    if (mode === "emoji") return emojiText;
-    // Icon mode: map emoji tokens to short labels
-    return toIconText(emojiText);
-  }, [emojiText, mode]);
+  const emojiText = useMemo(() => toEmojiCardFromLines(lines, "medium"), [lines]);
 
   const onExport = async () => {
     if (!cardRef.current) return;
@@ -121,13 +109,13 @@ export default function App() {
   };
 
   const onCopy = async () => {
-    await navigator.clipboard.writeText(displayText);
+    await navigator.clipboard.writeText(emojiText);
     toast("Emojis copied");
   };
 
   const onShare = async () => {
     const url = new URL(location.href);
-    url.hash = stateToHash({ raw, theme, mode });
+    url.hash = stateToHash({ raw, theme });
     history.replaceState({}, "", url.toString());
     await navigator.clipboard.writeText(url.toString());
     toast("Permalink copied");
@@ -192,8 +180,6 @@ export default function App() {
             <Controls
               theme={theme}
               setTheme={setTheme}
-              mode={mode}
-              setMode={setMode}
               onExport={onExport}
               onExportSVG={onExportSVG}
               onCopy={onCopy}
@@ -209,7 +195,7 @@ export default function App() {
             <div className="sticky" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
               <Card
                 ref={cardRef}
-                text={displayText}
+                text={emojiText}
                 showWatermark={showWatermark}
               />
               <div className="actions">

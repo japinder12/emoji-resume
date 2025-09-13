@@ -13,7 +13,7 @@ Turn resume text or PDFs into a clean, sharable emoji card. Paste your resume, t
 ## Highlights
 - Meaningful mapping: frameworks and tools beat base languages (⚛️ over ✨), Redis is 🧱 not a red square.
 - Smart caps by section: Skills show more; Experience/Projects stay concise.
-- 1:1 line mapping: one emoji row per input line for easy tracking.
+- Balanced rows: merges consecutive single‑emoji lines, but keeps multi‑emoji lines intact.
 - Accessible dark mode: toggle with a single key.
 - Responsive: works on mobile.
 - Quick actions: copy emojis, export PNG, and share a permalink (state in URL hash).
@@ -21,8 +21,8 @@ Turn resume text or PDFs into a clean, sharable emoji card. Paste your resume, t
 
 ## How It Works
 - Parser splits text into logical lines (bullets/pipes/section headers), then maps tech/keywords to emojis with scoring and section-aware caps.
-- Frameworks demote base language emojis to keep output specific.
-- Output preserves your line structure; exports match on-screen lines.
+- A global repetition cap prevents spammy repeats across the whole card.
+- Emojis are reflowed into balanced rows (4/6/8 per row), reducing fragmenting.
 
 ## Keyboard Shortcuts
 - Copy emojis: ⌘/Ctrl+Shift+C

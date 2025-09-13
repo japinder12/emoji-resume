@@ -35,7 +35,6 @@ export const EMOJI: Entry[] = [
   { kw: [/elixir\b/], emoji: "💧" },
   { kw: [/\.net|c#|dotnet/], emoji: "#️⃣" },
   { kw: [/\bc\b(?!\+\+)/], emoji: "🅲" },
-  { kw: [/rust/], emoji: "⚙️" },
   { kw: [/julia\b/], emoji: "🧪" },
   { kw: [/matlab\b/], emoji: "📐" },
   { kw: [/bash|shell|zsh/], emoji: "🐚" },

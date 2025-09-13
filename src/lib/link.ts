@@ -1,8 +1,6 @@
 export type State = {
   raw: string;
   theme: "light" | "dark";
-  // density removed (fixed to medium for back-compat default)
-  mode?: "emoji" | "icon"; // back-compat only
 };
 import { compressToBase64, decompressFromBase64 } from "./lz";
 
@@ -30,14 +28,14 @@ export function hashToState(hash: string): State | null {
       const json = decompressFromBase64(data);
       if (!json) return null;
       const obj = JSON.parse(json) as any;
-      // Strip density if present for forward-compat
-      const { density: _omit, ...rest } = obj || {};
+      // Strip deprecated fields for forward-compat
+      const { density: _d, mode: _m, ...rest } = obj || {};
       return rest as State;
     }
     // Legacy: atob(base64) then decodeURIComponent
     const json = decodeURIComponent(atob(h));
     const obj = JSON.parse(json) as any;
-    const { density: _omit, ...rest } = obj || {};
+    const { density: _d, mode: _m, ...rest } = obj || {};
     return rest as State;
   } catch {
     return null;
