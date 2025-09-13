@@ -10,6 +10,7 @@ const Card = forwardRef<HTMLDivElement, Props>(({ text, showWatermark }, ref) =>
         "rounded-2xl p-6 whitespace-pre-wrap font-mono select-text relative",
         "card card-shadow max-w-[480px]"
       )}
+      data-text={text}
       style={{ fontSize: "1.02rem", lineHeight: 1.7, paddingBottom: showWatermark ? 56 : undefined }}
       aria-label="Emoji resume preview"
     >

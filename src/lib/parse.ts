@@ -34,45 +34,10 @@ export function toLines(text: string): string[] {
 }
 
 export function toEmojiCardFromLines(lines: string[], density: Density) {
-  // Map each line to emojis first
-  const perLine = lines
-    .map(line => mapLine(line, detectSection(line), density))
-    .filter(Boolean);
-
-  // Global cap per emoji and flatten
-  const counts = new Map<string, number>();
-  const caps = new Map<string, number>([["🧑‍💻", 2]]); // reduce repetition of the laptop emoji
-  const allTokens: string[] = [];
-  for (const row of perLine) {
-    for (const t of row.split(/\s+/).filter(Boolean)) {
-      const n = counts.get(t) ?? 0;
-      const limit = caps.get(t) ?? 3;
-      if (n < limit) {
-        allTokens.push(t);
-        counts.set(t, n + 1);
-      }
-    }
-  }
-
-  // If none detected, return empty (UI shows placeholder)
-  if (allTokens.length === 0) {
-    return "";
-  }
-
-  // Chunk tokens into balanced rows
-  const perRow = density === "minimal" ? 4 : density === "medium" ? 6 : 8;
-  const rows: string[] = [];
-  let buf: string[] = [];
-  for (const t of allTokens) {
-    buf.push(t);
-    if (buf.length >= perRow) {
-      rows.push(buf.join(" "));
-      buf = [];
-    }
-  }
-  if (buf.length) rows.push(buf.join(" "));
-
-  const header = "👋🧑‍💻";
-  const footer = "💼";
-  return [header, ...rows, footer].join("\n");
+  // Preserve 1:1 alignment: one emoji row per input line
+  // Do not filter out empty results; empty strings keep blank lines
+  const rows = lines.map(line => mapLine(line, detectSection(line), density));
+  // If absolutely no emojis in any line, return empty so UI shows placeholder
+  if (rows.every(r => !r)) return "";
+  return rows.join("\n");
 }

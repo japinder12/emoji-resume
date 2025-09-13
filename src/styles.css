@@ -225,13 +225,16 @@ button { background: white; }
 .wm-auto { background: var(--surface); color: var(--text); border-color: var(--border); }
 
 /* Lines list layout (non-draggable) */
-.list { border: 1px solid var(--border); border-radius: .75rem; background: var(--surface); overflow: auto; color: var(--text); }
-.list-item { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .5rem; padding: .54rem .8rem; border-top: 1px solid var(--border); color: var(--text); }
+.list { width: 100%; border: 1px solid var(--border); border-radius: .75rem; background: var(--surface); overflow: auto; color: var(--text); }
+.list-item { width: 100%; display: grid; grid-template-columns: 1.25rem 1fr; align-items: center; gap: .5rem; padding: .34rem .8rem; border-top: 1px solid var(--border); color: var(--text); }
 .list-item:first-child { border-top: 0; }
-.list-input { width: 100%; background: transparent; outline: none; border: 0; font: inherit; padding: .25rem 0; }
-.icon-btn { width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); display: inline-flex; align-items: center; justify-content: center; }
+.list-input { display: block; width: 100%; min-width: 0; background: transparent; outline: none; border: 0; font: inherit; padding: .2rem 0; }
+.icon-btn { width: 20px; height: 20px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); display: inline-flex; align-items: center; justify-content: center; }
 .icon-btn:hover { background: var(--surface-2); }
 .icon-btn.is-pinned { color: #f59e0b; border-color: rgba(245,158,11,.35); background: #fffbeb; }
+/* Frameless variant for the inline delete next to handle */
+.icon-btn-ghost { border: none; background: transparent; color: var(--muted); }
+.icon-btn-ghost:hover { background: transparent; color: var(--text); }
 .badge { font-size: 10px; padding: 2px 6px; border-radius: 999px; border: 1px solid var(--soft); text-transform: capitalize; }
 .badge-skills { background: #ecfeff; color: #0e7490; }
 .badge-experience { background: #eef2ff; color: #4338ca; }
@@ -271,4 +274,4 @@ button { background: white; }
 /* Draggable list typography + aesthetics */
 .list-draggable { font-size: .92rem; font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; }
 .list-item:hover { background: var(--surface-2); }
-.drag-handle { opacity: 1; color: var(--muted); }
+.drag-handle { width: 1.25rem; text-align: center; opacity: 1; color: var(--muted); }
