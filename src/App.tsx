@@ -31,6 +31,7 @@ export default function App() {
     if (restored) {
       setTheme(restored.theme);
       setRaw(restored.raw);
+      setLines(toLines(restored.raw));
       return;
     }
     try {
@@ -40,12 +41,7 @@ export default function App() {
     } catch { /* empty */ }
   }, []);
 
-  
-  // Keep lines in sync with textarea edits (debounced for typing)
-  useEffect(() => {
-    const id = setTimeout(() => setLines(toLines(raw)), 150);
-    return () => clearTimeout(id);
-  }, [raw]);
+  // Lines sync is handled directly in onChange and onPDF
 
   // Dynamic theme color for mobile address bar + apply site-wide theme
   useEffect(() => {
@@ -123,7 +119,9 @@ export default function App() {
 
   const onPDF = async (f: File) => {
     const text = await pdfToText(f);
-    setRaw(text || "");
+    const v = text || "";
+    setRaw(v);
+    setLines(toLines(v));
     toast("PDF parsed");
   };
 
@@ -162,7 +160,7 @@ export default function App() {
                 <textarea
                   className="textarea h-[160px] w-full font-mono"
                   value={raw}
-                  onChange={(e) => setRaw(e.target.value)}
+                  onChange={(e) => { const v = e.target.value; setRaw(v); setLines(toLines(v)); }}
                   placeholder="Paste your resume text…"
                 />
               </div>

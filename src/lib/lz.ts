@@ -142,7 +142,6 @@ function _decompress(length: number, resetValue: number, getNextValue: (i: numbe
   let enlargeIn = 4;
   let dictSize = 4;
   let numBits = 3;
-  let entry = "";
   const result: string[] = [];
   let i: number;
   let w: string;
@@ -225,7 +224,6 @@ export function compressToBase64(input: string): string {
 export function decompressFromBase64(input: string): string | null {
   if (input == null) return "";
   if (input === "") return null;
-  const getBaseValue = (alphabet: string) => (character: string) => alphabet.indexOf(character);
-  return _decompress(input.length, 32, getBaseValue(keyStrBase64));
+  const getNextValue = (i: number) => keyStrBase64.indexOf(input.charAt(i));
+  return _decompress(input.length, 32, getNextValue);
 }
-

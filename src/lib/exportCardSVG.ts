@@ -15,10 +15,15 @@ export function exportCardSVG(node: HTMLElement) {
 
   // Base (unscaled) size from the DOM
   const baseWidth = Math.ceil(rect.width);
-  const baseHeight = Math.ceil(rect.height);
+  // Match PNG export by using full content height (scrollHeight)
+  const fullHeight = Math.ceil(node.scrollHeight);
+  const baseHeight = fullHeight;
+  // Header above the card to match PNG composition
+  const headerCssHeight = 36; // CSS px
+  const headerPx = headerCssHeight;
   // Output size (scaled)
   const width = Math.ceil(baseWidth * SCALE);
-  const height = Math.ceil(baseHeight * SCALE);
+  const height = Math.ceil((baseHeight + headerPx) * SCALE);
 
   // Font size in px
   const fontSize = parseFloat(styles.fontSize) || 16;
@@ -46,7 +51,7 @@ export function exportCardSVG(node: HTMLElement) {
   const lines = source.split("\n");
   const textNodes = lines
     .map((line, i) => {
-      const y = paddingTop + i * lineHeight;
+      const y = headerPx + paddingTop + i * lineHeight;
       return `<text x="${paddingLeft}" y="${y}" font-family="${escapeAttr(fontFamily)}" font-size="${fontSize}" fill="${escapeAttr(fg)}" dominant-baseline="hanging">${escapeXML(line)}</text>`;
     })
     .join("");
@@ -64,7 +69,8 @@ export function exportCardSVG(node: HTMLElement) {
     const pillW = approxWidth + padX * 2;
     const pillH = wmFontSize + padY * 2;
     const cx = Math.round((baseWidth - pillW) / 2);
-    const cy = Math.round(baseHeight - pillH - 12);
+    // Lower watermark closer to the bottom (smaller margin)
+    const cy = headerPx + Math.round(baseHeight - pillH - 4);
     const pillR = Math.min(14, Math.round(pillH / 2));
     watermark =
       `<g opacity="0.92">` +
@@ -73,10 +79,22 @@ export function exportCardSVG(node: HTMLElement) {
       `</g>`;
   }
 
+  // Header (to match PNG export)
+  const headerText = "💼 my emoji resume 📝";
+  const headerFontSize = 14; // px
+  const headerFontFamily = "Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial";
+  const header =
+    `<g>` +
+    `<rect x="0" y="0" width="${baseWidth}" height="${headerPx}" fill="${escapeAttr(bg)}" />` +
+    `<rect x="0" y="${headerPx - 1}" width="${baseWidth}" height="1" fill="rgba(0,0,0,0.10)" />` +
+    `<text x="${baseWidth / 2}" y="${headerPx / 2}" font-family="${escapeAttr(headerFontFamily)}" font-size="${headerFontSize}" font-weight="600" fill="${escapeAttr(fg)}" dominant-baseline="middle" text-anchor="middle">${escapeXML(headerText)}</text>` +
+    `</g>`;
+
   const svg =
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${baseWidth} ${baseHeight}" preserveAspectRatio="xMidYMid meet">` +
-    `<rect width="100%" height="100%" fill="${escapeAttr(bg)}" rx="${radius}" />` +
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${baseWidth} ${baseHeight + headerPx}" preserveAspectRatio="xMidYMid meet">` +
+    header +
+    `<rect x="0" y="${headerPx}" width="${baseWidth}" height="${baseHeight}" fill="${escapeAttr(bg)}" rx="${radius}" />` +
     textNodes +
     watermark +
     `</svg>`;
@@ -85,7 +103,7 @@ export function exportCardSVG(node: HTMLElement) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "emoji-resume.svg";
+  a.download = "cvmoji.svg";
   document.body.appendChild(a);
   a.click();
   a.remove();
