@@ -125,7 +125,7 @@ export const EMOJI: Entry[] = [
   { kw: [/ownership|accountab|on[- ]call|pagerduty/], emoji: "📟" },
 
   // Projects / Impact
-  { kw: [/project|built|implemented|designed/], emoji: "🛠️" },
+  { kw: [/project|built|implemented|designed/], emoji: "🏗️" },
   { kw: [/impact|saved|reduced|increased|improved|optimized|grew|cut|boosted/], emoji: "📈" },
   { kw: [/reliab|uptime|sla/], emoji: "🧱" },
   { kw: [/scalab|scale|horiz(ontal)? scaling|vertical scaling/], emoji: "📐" },
@@ -238,7 +238,7 @@ export function mapLine(line: string, sec: Section, density: Density): string {
     else if (sec === "skills") add("🧰", 1);
     else if (sec === "projects") add("🧪", 1);
   }
-  
+
   return Array.from(scores.values())
     .sort((a, b) => b.score - a.score)
     .map(s => s.emoji)
