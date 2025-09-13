@@ -11,7 +11,14 @@ const Card = forwardRef<HTMLDivElement, Props>(({ text, showWatermark }, ref) =>
         "card card-shadow max-w-[480px]"
       )}
       data-text={text}
-      style={{ fontSize: "1.02rem", lineHeight: 1.7, paddingBottom: showWatermark ? 56 : undefined }}
+      style={{
+        fontSize: "1.02rem",
+        lineHeight: 1.7,
+        paddingBottom: showWatermark ? 56 : undefined,
+        // Show just a few lines; scales with font-size/line-height
+        maxHeight: "calc(1.7em * 4 + 12px)", // ~4 lines + a bit of padding
+        overflowY: "auto"
+      }}
       aria-label="Emoji resume preview"
     >
       {text || "📋 Paste or upload your resume to preview"}

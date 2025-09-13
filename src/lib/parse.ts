@@ -30,7 +30,20 @@ export function toLines(text: string): string[] {
     t = t.replace(/\b([A-Z][A-Za-z\s\/&]+):\s*/g, "\n$1: ");
   }
 
-  return t.split(/\n/).map(s => s.trim()).filter(Boolean);
+  const arr = t
+    .split(/\n/)
+    .map(s => s.trim())
+    .filter(Boolean)
+    // Drop one-word lines unless they look like valid section headers/contact
+    .filter((s) => {
+      const words = s.split(/\s+/).filter(Boolean);
+      if (words.length <= 1) {
+        const sec = detectSection(s);
+        return sec !== "other"; // keep recognized headers/contact
+      }
+      return true;
+    });
+  return arr;
 }
 
 export function toEmojiCardFromLines(lines: string[], density: Density) {
@@ -57,6 +70,8 @@ export function toEmojiCardFromLines(lines: string[], density: Density) {
     }
     return out.join(" ");
   });
-  if (filtered.every(r => !r)) return "";
-  return filtered.join("\n");
+  // Remove empty lines in the final output for a tighter card
+  const compact = filtered.filter(Boolean);
+  if (compact.every(r => !r)) return "";
+  return compact.join("\n");
 }

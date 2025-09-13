@@ -7,6 +7,7 @@ import Toast from "./components/Toast";
 import { toast } from "./lib/toast";
 import { pdfToText } from "./lib/pdf";
 import { toEmojiCardFromLines, toLines } from "./lib/parse";
+import { toIconText } from "./lib/icons";
 import { exportCardPNG } from "./lib/exportImage";
 import { exportCardSVG } from "./lib/exportCardSVG";
 import { hashToState, stateToHash } from "./lib/link";
@@ -22,6 +23,7 @@ export default function App() {
   const [raw, setRaw] = useState(SAMPLE);
   const [lines, setLines] = useState<string[]>(toLines(SAMPLE));
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [mode, setMode] = useState<"emoji" | "icon">("emoji");
   const [showWatermark, setShowWatermark] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -30,7 +32,7 @@ export default function App() {
     const restored = hashToState(location.hash);
     if (restored) {
       setTheme(restored.theme);
-      // density removed (fixed)
+      if (restored.mode === "emoji" || restored.mode === "icon") setMode(restored.mode);
       setRaw(restored.raw);
       return;
     }
@@ -82,6 +84,12 @@ export default function App() {
     [lines]
   );
 
+  const displayText = useMemo(() => {
+    if (mode === "emoji") return emojiText;
+    // Icon mode: map emoji tokens to short labels
+    return toIconText(emojiText);
+  }, [emojiText, mode]);
+
   const onExport = async () => {
     if (!cardRef.current) return;
     try {
@@ -113,13 +121,13 @@ export default function App() {
   };
 
   const onCopy = async () => {
-    await navigator.clipboard.writeText(emojiText);
+    await navigator.clipboard.writeText(displayText);
     toast("Emojis copied");
   };
 
   const onShare = async () => {
     const url = new URL(location.href);
-    url.hash = stateToHash({ raw, theme });
+    url.hash = stateToHash({ raw, theme, mode });
     history.replaceState({}, "", url.toString());
     await navigator.clipboard.writeText(url.toString());
     toast("Permalink copied");
@@ -177,13 +185,15 @@ export default function App() {
                 <span className="panel-title">Reorder / edit lines</span>
               </div>
               <div className="panel-body">
-                <DraggableList lines={lines} setLines={setLines} />
+              <DraggableList lines={lines} setLines={setLines} />
               </div>
             </div>
 
             <Controls
               theme={theme}
               setTheme={setTheme}
+              mode={mode}
+              setMode={setMode}
               onExport={onExport}
               onExportSVG={onExportSVG}
               onCopy={onCopy}
@@ -199,7 +209,7 @@ export default function App() {
             <div className="sticky" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
               <Card
                 ref={cardRef}
-                text={emojiText}
+                text={displayText}
                 showWatermark={showWatermark}
               />
               <div className="actions">
