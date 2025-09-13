@@ -16,8 +16,12 @@ Turn resume text or PDFs into a clean, sharable emoji card. Paste your resume, t
 - Balanced rows: merges consecutive single‑emoji lines, but keeps multi‑emoji lines intact.
 - Accessible dark mode: toggle with a single key.
 - Responsive: works on mobile.
-- Quick actions: copy emojis, export PNG, and share a permalink (state in URL hash).
+- Quick actions: copy emojis, export PNG, export SVG (vector), and share a permalink (state in URL hash).
 - Friendly parsing: handles single-line blobs and PDFs; splits on bullets, pipes, semicolons, and common section headers.
+
+### Exports
+- PNG: raster export with a composed header bar for a consistent shareable frame.
+- SVG: same box size/framing as PNG but in vector quality. Watermark appears only on export, not in the live preview.
 
 ## How It Works
 - Parser splits text into logical lines (bullets/pipes/section headers), then maps tech/keywords to emojis with scoring and section-aware caps.
