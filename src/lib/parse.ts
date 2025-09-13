@@ -65,7 +65,7 @@ export function toEmojiCardFromLines(lines: string[], density: Density) {
     return false;
   };
 
-  const perRow = density === "minimal" ? 4 : density === "medium" ? 6 : 8;
+  const perRow = density === "minimal" ? 4 : density === "medium" ? 7 : 8;
   const out: string[] = [];
   let singles: string[] = [];
   const pinnedSingles: string[] = [];
