@@ -3,6 +3,15 @@
 Turn resume text or PDFs into a clean, sharable emoji card. Paste your resume, tweak the lines, and export a crisp PNG — perfect for profiles, portfolios, and quick intros.
 
 
+```
+Japinder Narula — Software Engineer
+Skills: Java, Kotlin, Python, React, SQL, Azure, Git
+Experience: LegalZoom — SWE Intern — Kotlin, Spring Boot, REST, SQL, PostgreSQL
+Projects: LSTM music generator; Portfolio website
+Education: B.S. Electrical Engineering and Computer Science
+Contact: github.com/japinder12 • website • email
+```
+
 ![cvmoji resume](./cvmoji.png)
 
 ### Screenshot of the site
