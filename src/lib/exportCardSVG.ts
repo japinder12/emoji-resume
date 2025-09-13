@@ -44,7 +44,8 @@ export function exportCardSVG(node: HTMLElement) {
   const bg = styles.backgroundColor || "#ffffff";
   const fg = styles.color || "#000000";
   const fontFamily = styles.fontFamily || "monospace";
-  const radius = parseFloat(styles.borderTopLeftRadius) || 0;
+  // Force square corners in SVG export (no rounding)
+  const radius = 0;
 
   const raw = node.getAttribute("data-text");
   const source = (raw ?? node.innerText).replace(/\r\n/g, "\n");
@@ -94,7 +95,7 @@ export function exportCardSVG(node: HTMLElement) {
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${baseWidth} ${baseHeight + headerPx}" preserveAspectRatio="xMidYMid meet">` +
     header +
-    `<rect x="0" y="${headerPx}" width="${baseWidth}" height="${baseHeight}" fill="${escapeAttr(bg)}" rx="${radius}" />` +
+    `<rect x="0" y="${headerPx}" width="${baseWidth}" height="${baseHeight}" fill="${escapeAttr(bg)}" />` +
     textNodes +
     watermark +
     `</svg>`;
