@@ -13,7 +13,7 @@ import { hashToState, stateToHash } from "./lib/link";
 
 const SAMPLE = `Japinder Narula — Software Engineer
 Skills: Java, Kotlin, Python, React, SQL, Azure, Git
-Experience: LegalZoom — SWE Intern — Kotlin, Spring Boot, REST, JPA, SQL
+Experience: LegalZoom — SWE Intern — Kotlin, Spring Boot, REST, SQL, PostgreSQL
 Projects: LSTM music generator; Portfolio website
 Education: B.S. Electrical Engineering and Computer Science
 Contact: github.com/japinder12 • website • email`;

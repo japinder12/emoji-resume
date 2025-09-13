@@ -48,7 +48,10 @@ export function toLines(text: string): string[] {
 
 export function toEmojiCardFromLines(lines: string[], density: Density) {
   // Map each input line to emojis
-  const mapped = lines.map(line => mapLine(line, detectSection(line), density)).filter(Boolean);
+  const mapped = lines.map(line => ({
+    sec: detectSection(line),
+    row: mapLine(line, detectSection(line), density),
+  })).filter(x => Boolean(x.row));
 
   // Global repetition cap to avoid spam across the whole card
   const counts = new Map<string, number>();
@@ -64,29 +67,57 @@ export function toEmojiCardFromLines(lines: string[], density: Density) {
 
   const perRow = density === "minimal" ? 4 : density === "medium" ? 6 : 8;
   const out: string[] = [];
-  const singles: string[] = [];
+  let singles: string[] = [];
+  const pinnedSingles: string[] = [];
+  const pinnedSections = new Set(["header"]);
+  let lastSec: ReturnType<typeof detectSection> | null = null;
 
-  for (const row of mapped) {
+  const flushSingles = () => {
+    while (singles.length >= perRow) {
+      out.push(singles.splice(0, perRow).join(" "));
+    }
+    if (singles.length) {
+      out.push(singles.join(" "));
+      singles = [];
+    }
+  };
+
+  for (const { sec, row } of mapped) {
     const tokens = row.split(/\s+/).filter(Boolean).filter(admit);
     if (tokens.length === 0) continue;
 
+    // If section changes, keep layout tidy by flushing singles so far
+    if (lastSec !== null && lastSec !== sec && singles.length) flushSingles();
+    lastSec = sec;
+
     if (tokens.length === 1) {
-      // Accumulate short lines and pack them to reduce over-fragmentation
-      singles.push(tokens[0]);
-      while (singles.length >= perRow) {
-        out.push(singles.splice(0, perRow).join(" "));
+      const t = tokens[0];
+      if (pinnedSections.has(sec)) {
+        // Prefer placing header/education singles at the very top
+        pinnedSingles.push(t);
+      } else {
+        // Accumulate only until a boundary; flush nearby rather than at the end
+        singles.push(t);
+        if (singles.length >= perRow) {
+          out.push(singles.splice(0, perRow).join(" "));
+        }
       }
     } else if (tokens.length > perRow) {
-      // Chunk very long lines
+      flushSingles();
       for (let i = 0; i < tokens.length; i += perRow) {
         out.push(tokens.slice(i, i + perRow).join(" "));
       }
     } else {
-      // Keep multi-token lines as their own row to preserve structure
+      flushSingles();
       out.push(tokens.join(" "));
     }
   }
 
-  if (singles.length) out.push(singles.join(" "));
-  return out.join("\n");
+  flushSingles();
+  // Prepend pinned singles (chunked) so they land at the top
+  const pre: string[] = [];
+  let ps = [...pinnedSingles];
+  while (ps.length >= perRow) pre.push(ps.splice(0, perRow).join(" "));
+  if (ps.length) pre.push(ps.join(" "));
+  return [...pre, ...out].join("\n");
 }
