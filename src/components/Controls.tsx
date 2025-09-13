@@ -17,7 +17,6 @@ export function Controls({
 }) {
   return (
     <div className="control-row">
-      {/* Mode toggle removed */}
       <div className="control-group" aria-label="Theme">
         <div className="pill" role="tablist" aria-label="Theme toggle">
           <button

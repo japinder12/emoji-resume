@@ -19,7 +19,7 @@ export function exportCardSVG(node: HTMLElement) {
   const fullHeight = Math.ceil(node.scrollHeight);
   const baseHeight = fullHeight;
   // Header above the card to match PNG composition
-  const headerCssHeight = 36; // CSS px
+  const headerCssHeight = 36;
   const headerPx = headerCssHeight;
   // Output size (scaled)
   const width = Math.ceil(baseWidth * SCALE);
@@ -56,7 +56,7 @@ export function exportCardSVG(node: HTMLElement) {
     })
     .join("");
 
-  // Optional watermark: include if the live node has the watermark element
+  // Optional watermark if the live node has the watermark element
   const hasWatermark = !!node.querySelector('.wm');
   let watermark = "";
   if (hasWatermark) {
@@ -69,7 +69,7 @@ export function exportCardSVG(node: HTMLElement) {
     const pillW = approxWidth + padX * 2;
     const pillH = wmFontSize + padY * 2;
     const cx = Math.round((baseWidth - pillW) / 2);
-    // Lower watermark closer to the bottom (smaller margin)
+    // Lower watermark closer to the bottom
     const cy = headerPx + Math.round(baseHeight - pillH - 4);
     const pillR = Math.min(14, Math.round(pillH / 2));
     watermark =
@@ -81,7 +81,7 @@ export function exportCardSVG(node: HTMLElement) {
 
   // Header (to match PNG export)
   const headerText = "💼 my emoji resume 📝";
-  const headerFontSize = 14; // px
+  const headerFontSize = 14;
   const headerFontFamily = "Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial";
   const header =
     `<g>` +

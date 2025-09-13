@@ -185,7 +185,6 @@ export default function App() {
               showActions={false}
             />
 
-            {/* Shortcuts moved to footer for a lighter touch */}
           </section>
 
           {/* Right: preview + actions below */}

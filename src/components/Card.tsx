@@ -15,8 +15,7 @@ const Card = forwardRef<HTMLDivElement, Props>(({ text, showWatermark }, ref) =>
         fontSize: "1.08rem",
         lineHeight: 1.7,
         paddingBottom: showWatermark ? 56 : undefined,
-        // Show more lines; scales with font-size/line-height
-        maxHeight: "calc(1.7em * 8 + 12px)", // ~8 lines + a bit of padding
+        maxHeight: "calc(1.7em * 8 + 12px)",
         overflowY: "auto"
       }}
       aria-label="Emoji resume preview"
