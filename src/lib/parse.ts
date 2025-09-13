@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-escape */ // regex-heavy file; escapes intentional for readability
 import { detectSection } from "./sections";
-import { mapLine, type Density } from "./emojiMap";
+import { mapLine } from "./emojiMap";
 
 export function toLines(text: string): string[] {
   // Normalize line endings
@@ -46,16 +46,16 @@ export function toLines(text: string): string[] {
   return arr;
 }
 
-export function toEmojiCardFromLines(lines: string[], density: Density) {
+export function toEmojiCardFromLines(lines: string[]) {
   // Map each input line to emojis
   const mapped = lines.map(line => ({
     sec: detectSection(line),
-    row: mapLine(line, detectSection(line), density),
+    row: mapLine(line, detectSection(line)),
   })).filter(x => Boolean(x.row));
 
   // Global repetition cap to avoid spam across the whole card
   const counts = new Map<string, number>();
-  const limitFor = (emoji: string) => (emoji === "🧑‍💻" ? 1 : density === "minimal" ? 2 : density === "medium" ? 3 : 4);
+  const limitFor = (emoji: string) => (emoji === "🧑‍💻" ? 1 : 3);
 
   // Helper: admit token if under global cap
   const admit = (t: string) => {
@@ -65,7 +65,7 @@ export function toEmojiCardFromLines(lines: string[], density: Density) {
     return false;
   };
 
-  const perRow = density === "minimal" ? 4 : density === "medium" ? 7 : 8;
+  const perRow = 7;
   const out: string[] = [];
   let singles: string[] = [];
   const pinnedSingles: string[] = [];

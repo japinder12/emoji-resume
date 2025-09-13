@@ -72,7 +72,7 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lines, theme]);
 
-  const emojiText = useMemo(() => toEmojiCardFromLines(lines, "medium"), [lines]);
+  const emojiText = useMemo(() => toEmojiCardFromLines(lines), [lines]);
 
   const onExport = async () => {
     if (!cardRef.current) return;

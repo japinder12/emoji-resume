@@ -1,4 +1,3 @@
-export type Density = "minimal" | "medium" | "extra";
 import type { Section } from "./sections";
 
 type Entry = { kw: (string | RegExp)[]; emoji: string; sections?: Section[] };
@@ -154,7 +153,7 @@ export const EMOJI: Entry[] = [
   { kw: [/\bgovernment\b/, /\bpublic sector\b/, /\bfederal\b/, /\bcivic\b/, /\bgovt\b/, /\bgov\b/], emoji: "🏛️" },
 ];
 
-export function mapLine(line: string, sec: Section, density: Density): string {
+export function mapLine(line: string, sec: Section): string {
   const l = line.toLowerCase();
 
   // Quick ignore for lines that are just dates/locations
@@ -173,24 +172,13 @@ export function mapLine(line: string, sec: Section, density: Density): string {
     : [l];
 
 
-  // Section-aware caps — boost "medium" to show more
+  // Section-aware caps (single, streamlined density)
   const cap = (() => {
-    if (sec === "skills") {
-      if (density === "minimal") return 3;
-      if (density === "medium") return 8; // show more on medium
-      return 10; // extra
-    }
-    if (sec === "experience" || sec === "projects") {
-      if (density === "minimal") return 2;
-      if (density === "medium") return 6; // show more on medium
-      return 7; // extra
-    }
-    if (sec === "education") return density === "minimal" ? 1 : density === "medium" ? 4 : 5;
-    if (sec === "contact") return density === "minimal" ? 2 : density === "medium" ? 6 : 7;
-    // default
-    if (density === "minimal") return 3;
-    if (density === "medium") return 7;
-    return 9;
+    if (sec === "skills") return 8;
+    if (sec === "experience" || sec === "projects") return 6;
+    if (sec === "education") return 4;
+    if (sec === "contact") return 6;
+    return 7;
   })();
 
   type ScoreItem = { emoji: string; score: number; tag?: string };
